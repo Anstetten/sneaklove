@@ -1,5 +1,6 @@
 const express = require('express');
 const Sneaker = require('../models/Sneaker');
+const User = require('../models/User');
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -18,36 +19,10 @@ router.get('/sneakers/collection', (req, res) => {
     });
 });
 
-router.get('/sneakers/men', (req, res) => {
-  //console.log(req.query);
+router.get('/sneakers/:category', (req, res) => {
+  //console.log(req.params.category);
   Sneaker()
-    .find(req.query.category === 'men')
-    .then((dbRes) => {
-      res.render('products.hbs', {
-        sneakerMen: dbRes,
-      });
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-router.get('/sneakers/women', (req, res) => {
-  Sneaker()
-    .find(req.query.category === 'women')
-    .then((dbRes) => {
-      res.render('products.hbs', {
-        sneakerMen: dbRes,
-      });
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-router.get('/sneakers/kids', (req, res) => {
-  Sneaker()
-    .find(req.query.category === 'kids')
+    .find(req.params.category === 'men')
     .then((dbRes) => {
       res.render('products.hbs', {
         sneakerMen: dbRes,
@@ -78,6 +53,14 @@ router.get('/signup', (req, res) => {
 
 router.get('/signin', (req, res) => {
   res.render('signin');
+});
+
+router.get('/prod-add', (req, res, next) => {
+  res.render('products_add.hbs');
+});
+
+router.get('/prod-manage', (req, res, next) => {
+  res.render('products_manage.hbs');
 });
 
 module.exports = router;
