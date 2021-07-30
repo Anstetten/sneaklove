@@ -5,20 +5,32 @@ router.get("/", (req, res) => {
   res.render("index.hbs");
 });
 
-router.get("/sneakers/:cat", (req, res) => {
-  res.send("bar");
+router.get("/sneakers/collection", (req, res) => {
+  res.render("products.hbs");
+});
+
+router.get("/sneakers/men", (req, res) => {
+  res.render("products.hbs");
+});
+
+router.get("/sneakers/women", (req, res) => {
+  res.render("products.hbs");
+});
+
+router.get("/sneakers/kids", (req, res) => {
+  res.render("products.hbs");
 });
 
 router.get("/one-product/:id", (req, res) => {
-  res.send("baz");
+  res.render("one_product.hbs");
 });
 
 router.get("/signup", (req, res) => {
-  res.send("sneak");
+  res.render("signup");
 });
 
 router.get("/signin", (req, res) => {
-  res.send("love");
+  res.render("signin");
 });
 
 
