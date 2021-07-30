@@ -7,7 +7,9 @@ createCatButton.onclick = ()=>{
     let tag = newTagInput.value;
     if(tag !=="") {
         axios.post("http://localhost:3000/tags/create",{newTag: tag})
-            .then((res)=>{newTagInput.value=""; })
+            .then((res)=>{
+            newTagInput.value="";
+            window.location.reload(); })
             .catch((error)=>{console.log(error)});
     }
 }

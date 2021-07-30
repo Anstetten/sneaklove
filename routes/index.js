@@ -15,7 +15,10 @@ router.get('/sneakers/collection', (req, res) => {
       tagModel.find()
           .then((foundTags)=>{
             let tagsList=foundTags;
-            res.render('products.hbs', {sneakers: dbRes, tags :tagsList,});          
+            res.render('products.hbs', {
+              scripts:["filterByTags.js",],
+              sneakers: dbRes,
+              tags :tagsList,});          
           })
           .catch((error)=>console.log(error));
       
@@ -44,8 +47,10 @@ router.get('/sneakers/:category', (req, res) => {
       console.log(tagsArray);
 
       res.render('products.hbs', {
+        scripts:["filterByTags.js",],
         sneakers: dbRes,
         tags: tagsArray,
+        category: category,
       });
     })
     .catch((error) => {
