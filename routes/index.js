@@ -35,11 +35,17 @@ router.get('/sneakers/:category', (req, res) => {
       let tagsList = [];
 
       foundSneakers.forEach((sneaker)=>{
-        console.log(sneaker);
+        sneaker.id_tags.forEach((tag)=>{
+          tagsList.push(tag);
+        })
       })
+      let tagSet = new Set(tagsList);
+      let tagsArray= [...tagSet];
+      console.log(tagsArray);
 
       res.render('products.hbs', {
         sneakers: dbRes,
+        tags: tagsArray,
       });
     })
     .catch((error) => {
