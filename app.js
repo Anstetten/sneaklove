@@ -13,6 +13,8 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const dev_mode = false;
 const logger = require("morgan");
+const mongoose = require("mongoose");
+const userModel = require("./models/User");
 
 // config logger (pour debug)
 app.use(logger("dev"));
@@ -36,6 +38,27 @@ app.use(
     resave: true,
   })
 );
+
+app.use((req, res, next) => {
+  if (req.session.currentUser) {
+    userModel.findById(req.session.currentUser._id)
+      .then((userFromDb) => {
+          res.locals.currentUser = userFromDb;
+          res.locals.isLoggedIn = true;
+          next();
+          // res.locals.isAdmin = userFromDB.isAdmin
+      })
+      .catch((error) => {
+          next(error);
+      });
+  } 
+  else {
+      res.locals.currentUser = undefined;
+      res.locals.isLoggedIn = false;
+  
+      next();
+  }
+  });
 
 // below, site_url is used in partials/shop_head.hbs to perform ajax request (var instead of hardcoded)
 app.locals.site_url = process.env.SITE_URL;

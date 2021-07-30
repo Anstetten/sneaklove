@@ -9,9 +9,7 @@ const SALT=9;
 router.post("/signup", async (req, res, next) => {
     
     try{
-         
         const user = req.body;
-        
         if(!user.lastname || !user.firstname || !user.password || !user.email) {
             console.log("I am here");
             res.render('signup.hbs');
@@ -43,6 +41,41 @@ router.post("/signup", async (req, res, next) => {
     //res.render("signup");
   });
 
+  router.post("/signin", async (req, res, next) => {
+    
+    try{
+        const user = req.body;
+        if(!user.password || !user.email) {
+            res.render('signin.hbs');
+            return;
+        }
+
+        const foundUser = await userModel.findOne({email:user.email});
+        
+        if (!foundUser){
+            res.render('signin.hbs', {msg:{status:"ERROR:", text:"Bed Credentials"}});
+            return;
+        }
+
+        //If it is a new new user encrypt the pswd and give it to the user
+        
+        const isValidPassword = bcrypt.compareSync(user.password, foundUser.password);
+        
+        if (isValidPassword){
+            req.session.currentUser = {_id:foundUser._id};
+            res.redirect("/");
+        }
+        
+        else{
+            res.render('signin.hbs', {msg:{status:"ERROR:", text:"Bed Credentials"}});
+            return;
+        }
+  
+    }
+    catch (error) {next(error);}
+
+    //res.render("signup");
+  });
 
 
 
