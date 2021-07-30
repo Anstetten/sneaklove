@@ -11,9 +11,14 @@ router.get('/', (req, res) => {
 router.get('/sneakers/collection', (req, res) => {
   Sneaker.find()
     .then((dbRes) => {
-      res.render('products.hbs', {
-        sneakers: dbRes,
-      });
+
+      tagModel.find()
+          .then((foundTags)=>{
+            let tagsList=foundTags;
+            res.render('products.hbs', {sneakers: dbRes, tags :tagsList,});          
+          })
+          .catch((error)=>console.log(error));
+      
     })
     .catch((err) => {
       next(err);
@@ -21,17 +26,24 @@ router.get('/sneakers/collection', (req, res) => {
 });
 
 router.get('/sneakers/:category', (req, res) => {
-  console.log(req.params.category);
   const category = req.params.category;
 
   Sneaker.find({ category: category })
+    .populate('id_tags')
     .then((dbRes) => {
+      let foundSneakers = dbRes;
+      let tagsList = [];
+
+      foundSneakers.forEach((sneaker)=>{
+        console.log(sneaker);
+      })
+
       res.render('products.hbs', {
         sneakers: dbRes,
       });
     })
-    .catch((err) => {
-      next(err);
+    .catch((error) => {
+      console.log(error);
     });
 });
 
@@ -59,7 +71,7 @@ router.get('/signin', (req, res) => {
 
 
 
-//Add new product to database
+//Display add new product page and fetch all tags in db
 router.get('/prod-add', (req, res, next) => {
   let tagsList=[];
 
@@ -71,12 +83,10 @@ router.get('/prod-add', (req, res, next) => {
 
     })
     .catch((error)=>console.log(error))
-
-
- 
 });
 
-router.post('/pro-add', (req, res, next) => {
+//Add new product to database
+router.post('/prod-add', (req, res, next) => {
   Sneaker.create(req.body)
     .then((createdProduct) => {
       console.log(createdProduct);
