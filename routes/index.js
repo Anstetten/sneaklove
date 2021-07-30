@@ -57,7 +57,7 @@ router.get('/signin', (req, res) => {
 });
 
 router.get('/prod-add', (req, res, next) => {
-  res.render('products_add.hbs');
+  res.render('products_add.hbs', {scripts:["addProduct.js",]});
 });
 
 router.post('/pro-add', (req, res, next) => {
