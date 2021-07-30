@@ -2,6 +2,7 @@ const express = require('express');
 const Sneaker = require('../models/Sneaker');
 const User = require('../models/User');
 const router = express.Router();
+const tagModel = require('../models/Tag');
 
 router.get('/', (req, res) => {
   res.render('index.hbs');
@@ -56,8 +57,23 @@ router.get('/signin', (req, res) => {
   res.render('signin');
 });
 
+
+
+//Add new product to database
 router.get('/prod-add', (req, res, next) => {
-  res.render('products_add.hbs', {scripts:["addProduct.js",]});
+  let tagsList=[];
+
+  tagModel.find()
+    .then((foundTags)=>{
+      tagsList=foundTags;
+      console.log(tagsList);
+      res.render('products_add.hbs', {scripts:["addProduct.js",],tags : tagsList,});
+
+    })
+    .catch((error)=>console.log(error))
+
+
+ 
 });
 
 router.post('/pro-add', (req, res, next) => {
