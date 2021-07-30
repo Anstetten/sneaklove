@@ -20,12 +20,13 @@ router.get('/sneakers/collection', (req, res) => {
 });
 
 router.get('/sneakers/:category', (req, res) => {
-  //console.log(req.params.category);
-  Sneaker()
-    .find(req.params.category === 'men')
+  console.log(req.params.category);
+  const category = req.params.category;
+
+  Sneaker.find({ category: category })
     .then((dbRes) => {
       res.render('products.hbs', {
-        sneakerMen: dbRes,
+        sneakers: dbRes,
       });
     })
     .catch((err) => {
@@ -59,8 +60,28 @@ router.get('/prod-add', (req, res, next) => {
   res.render('products_add.hbs');
 });
 
+router.post('/pro-add', (req, res, next) => {
+  Sneaker.create(req.body)
+    .then((createdProduct) => {
+      console.log(createdProduct);
+      console.log(req.body);
+      //res.redirect('/sneakers/collection');
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
 router.get('/prod-manage', (req, res, next) => {
-  res.render('products_manage.hbs');
+  Sneaker.find()
+    .then((dbRes) => {
+      res.render('products_manage.hbs', {
+        sneakers: dbRes,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 module.exports = router;
